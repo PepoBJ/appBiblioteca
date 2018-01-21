@@ -1,0 +1,116 @@
+﻿
+@model _02_Presentation.ViewModel.VMLibroAutor
+
+@{
+    ViewBag.title = "Registro de un nuevo autor para un libro";
+    ViewBag.subTitle = "";
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">Formulario de registro</h3>
+    </div>
+    <form id="frmRegistar" action="@Url.Action("Insert","LibroAutor")" method="post">
+        <div class="box-body">
+
+            <div class="form-group">
+                <label for="codigoAutor">Autor</label>
+                <select name="codigoAutor" id="codigoAutor" class="form-control">
+                    <option></option>
+                    @foreach (var autor in Model.listaAutores)
+                    {
+                        <option value="@autor.codigoAutor">@autor.nombre @autor.apellidos</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="codigoLibro">Libro</label>
+                <select name="codigoLibro" id="codigoLibro" class="form-control">
+                    <option></option>
+                    @foreach (var libro in Model.listaLibros)
+                    {
+                        <option value="@libro.codigoLibro">@libro.titulo</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+
+        <div class="box-footer">
+            <input type="button" class="btn btn-primary" id="registroUsuario" onclick="enviarFormulario(event)" name="registroUsuario" value="Registrar">
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#codigoLibro").select2({
+            width: '100%'
+        });
+
+        $("#codigoAutor").select2({
+            width: '100%'
+        });
+
+        $('#frmRegistar').formValidation(
+		{
+		    framework: 'bootstrap',
+		    excluded: [':disabled', ':hidden', ':not(:visible)', '[class*="notValidate"]'],
+		    live: 'enabled',
+		    message: '<b style="color: #9d9d9d;">Asegúrese que realmente no necesita este valor.</b>',
+		    trigger: null,
+		    fields:
+			{
+			    codigoAutor:
+                {
+                    validators:
+                    {
+                        notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Autor" es requerido.</b>'
+						}
+                    }
+                },
+			    codigoLibro:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Libro" es requerido.</b>'
+						}
+					}
+				}
+			}
+		});
+    });
+
+    function enviarFormulario(e) {
+        e.preventDefault();
+
+        resetFieldsFrmEditar();
+
+        $('#frmRegistar').data('formValidation').validate();
+
+        if ($('#frmRegistar').data('formValidation').isValid()) {
+            swal({
+                title: '¿Estas Seguro?',
+                text: "Guardar datos del nuevo autor para el libro.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#39843A',
+                cancelButtonColor: '#dd4b39',
+                confirmButtonText: 'Si, Guardar.'
+            }).then(function (confirm) {
+                $('#frmRegistar')[0].submit();
+            });
+        }
+    }
+
+    function resetFieldsFrmEditar() {
+        $('#frmRegistar').data('formValidation').resetField($('#codigoLibro'));
+        $('#frmRegistar').data('formValidation').resetField($('#codigoAutor'));
+    }
+</script>

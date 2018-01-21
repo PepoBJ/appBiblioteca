@@ -1,0 +1,61 @@
+﻿@model _02_Presentation.ViewModel.VMAutor
+
+@{
+    ViewBag.title = "";
+    ViewBag.subTitle = "";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Lista de Autores</h3>
+            </div>
+
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th class="col-md-5">Nombre</th>
+                        <th class="col-md-5">Apellidos</th>
+                        <th>Acciones</th>
+                    </tr>
+                    @foreach (var autor in Model.listaAutores)
+                    {
+                        <tr>
+                            <td class="fieldNombre">@autor.nombre</td>
+                            <td class="fieldNombre">@autor.apellidos</td>
+                            <td>
+                                <a href="@Url.Action("Delete","Autor", new { parameter = autor.codigoAutor })" onclick="return accionUsuario(this, 'Eliminar')" class="label label-danger">Eliminar</a>
+                                <a href="@Url.Action("Edit","Autor", new { parameter = autor.codigoAutor })" class="label label-info">Editar</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function accionUsuario(element, accion) {
+        var confirm = false;
+
+        swal({
+            title: '¿Estas Seguro?',
+            text: accion + " el autor.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#39843A',
+            cancelButtonColor: '#dd4b39',
+            confirmButtonText: 'Si, ' + accion + '.'
+        }).then(function () {
+            window.location = $(element).attr('href');
+        }, function (dismiss) {
+            if (dismiss === 'cancel') {
+                confirm = false;
+            }
+        });
+        return confirm;
+    }
+
+</script>

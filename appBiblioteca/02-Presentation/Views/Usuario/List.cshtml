@@ -1,0 +1,76 @@
+﻿@model _02_Presentation.ViewModel.VMUsuario
+
+@{
+    ViewBag.title = "";
+    ViewBag.subTitle = "";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Lista de Usuarios</h3>
+            </div>
+
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th class="hidden-xs">Direccion</th>
+                        <th class="hidden-xs">Telefono</th>
+                        <th class="hidden-xs">Dni</th>
+                        <th class="hidden-xs">Codigo interno</th>
+                        <th class="hidden-xs">Sexo</th>
+                        <th class="hidden-xs">Carrera</th>
+                        <th class="hidden-xs">Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                    @foreach (var usuario in Model.listaUsuarios)
+                    {
+                        <tr>
+                            <td class="fieldNombre">@usuario.nombre</td>
+                            <td class="fieldApellido">@usuario.apellidos</td>
+                            <td class="fielddireccion hidden-xs">@usuario.direccion</td>
+                            <td class="fieldtelefono hidden-xs">@usuario.telefono</td>
+                            <td class="fielddni hidden-xs">@usuario.dni</td>
+                            <td class="fieldCodigoInterno hidden-xs">@usuario.codigoInterno</td>
+                            <td class="fieldSexo hidden-xs">@(usuario.sexo ? "Masculino" : "Femenino")</td>
+                            <td class="fieldCarrera hidden-xs">@usuario.parentCarrera.nombre</td>
+                            <td class="fieldRol hidden-xs">@usuario.rol</td>
+                            
+                        <td>
+                            <a href="@Url.Action("Delete","Usuario", new { parameter = usuario.codigoUsuario })" onclick="return accionUsuario(this, 'Eliminar')" class="label label-danger">Eliminar</a>
+                            <a href="@Url.Action("Edit","Usuario", new { parameter = usuario.codigoUsuario })"  class="label label-info">Editar</a>
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function accionUsuario(element, accion) {
+        var confirm = false;
+
+        swal({
+            title: '¿Estas Seguro?',
+            text: accion + " al usuario.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#39843A',
+            cancelButtonColor: '#dd4b39',
+            confirmButtonText: 'Si, ' + accion + '.'
+        }).then(function () {
+            window.location = $(element).attr('href');
+        }, function (dismiss) {
+            if (dismiss === 'cancel') {
+                confirm = false;
+            }
+        });
+        return confirm;
+    }
+
+</script>

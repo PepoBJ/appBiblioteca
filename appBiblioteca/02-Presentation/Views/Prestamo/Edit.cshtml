@@ -1,0 +1,113 @@
+﻿@model _02_Presentation.ViewModel.VMPrestamo
+
+@{
+    ViewBag.title = "Modificar prestamo";
+    ViewBag.subTitle = "";
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">Formulario de registro</h3>
+    </div>
+    <form id="frmRegistar" action="@Url.Action("Edit","Prestamo")" method="post">
+        <div class="box-body">
+            <div class="form-group">
+                <label for="codigoUsuario">Usuario</label>
+                <input type="text" class="form-control" id="codigoUsuario" name="codigoUsuario"  value="@Model.dtoPrestamo.parentUsuario.nombre @Model.dtoPrestamo.parentUsuario.apellidos" disabled>
+            </div>
+            <div class="form-group">
+                <label for="codigoLibro">Libro</label>
+                <input type="text" class="form-control" id="codigoLibro" name="codigoLibro" value="@Model.dtoPrestamo.parentLibro.titulo" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="fechaPrestamo">Fecha prestamo</label>
+                <input type="text" class="form-control" id="fechaPrestamo" name="fechaPrestamo" placeholder="Fecha prestamo" value="@Model.dtoPrestamo.fechaPrestamo.ToString("dd/MM/yyyy")">
+            </div>
+
+            <div class="form-group">
+                <label for="fechaDevolucion">Fecha Devolucion</label>
+                <input type="text" class="form-control" id="fechaDevolucion" name="fechaDevolucion" placeholder="Fecha devolucion" value="@Model.dtoPrestamo.fechaDevolucion.ToString("dd/MM/yyyy")">
+            </div>
+            <input type="hidden" name="codigoPrestamo" value="@Model.dtoPrestamo.codigoPrestamo" />
+        </div>
+
+        <div class="box-footer">
+            <input type="button" class="btn btn-primary" id="registroUsuario" onclick="enviarFormulario(event)" name="registroUsuario" value="Modificar">
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $(function () {
+        $('#fechaDevolucion').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        });
+
+        $('#fechaPrestamo').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        });
+
+        $('#frmRegistar').formValidation(
+		{
+		    framework: 'bootstrap',
+		    excluded: [':disabled', ':hidden', ':not(:visible)', '[class*="notValidate"]'],
+		    live: 'enabled',
+		    message: '<b style="color: #9d9d9d;">Asegúrese que realmente no necesita este valor.</b>',
+		    trigger: null,
+		    fields:
+			{
+			    fechaPrestamo:
+                {
+                    validators:
+                    {
+                        notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Fecha prestamo" es requerido.</b>'
+						}
+                    }
+                },
+			    fechaDevolucion:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Fecha de devolucion" es requerido.</b>'
+						}
+					}
+				}
+			}
+		});
+    });
+
+    function enviarFormulario(e) {
+        e.preventDefault();
+
+        resetFieldsFrmEditar();
+
+        $('#frmRegistar').data('formValidation').validate();
+
+        if ($('#frmRegistar').data('formValidation').isValid()) {
+            swal({
+                title: '¿Estas Seguro?',
+                text: "Guardar datos del nuevo Prestamo.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#39843A',
+                cancelButtonColor: '#dd4b39',
+                confirmButtonText: 'Si, Guardar.'
+            }).then(function (confirm) {
+                $('#frmRegistar')[0].submit();
+            });
+        }
+    }
+
+    function resetFieldsFrmEditar() {
+        $('#frmRegistar').data('formValidation').resetField($('#codigoLibro'));
+        $('#frmRegistar').data('formValidation').resetField($('#fechaDevolucion'));
+        $('#frmRegistar').data('formValidation').resetField($('#codigoUsuario'));
+    }
+</script>

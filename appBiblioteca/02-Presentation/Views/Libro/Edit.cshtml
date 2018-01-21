@@ -1,0 +1,168 @@
+﻿@model _02_Presentation.ViewModel.VMLibro
+
+@{
+    ViewBag.title = "Modificar libro";
+    ViewBag.subTitle = "";
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">Formulario de registro</h3>
+    </div>
+    <form id="frmRegistar" action="@Url.Action("Edit","Libro")" method="post">
+        <div class="box-body">
+            <div class="form-group">
+                <label for="titulo">Titulo</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Titulo" value="@Model.dtoLibro.titulo">
+            </div>            
+            <div class="form-group">
+                <label for="idioma">Idioma</label>
+                <input type="text" id="idioma" name="idioma" autocomplete="off" value="@Model.dtoLibro.idioma" class="form-control" placeholder="Idioma">
+            </div>
+            <div class="form-group">
+                <label for="paginas">Numero de paginas</label>
+                <input type="number" min="0" id="paginas" name="paginas" autocomplete="off" value="@Model.dtoLibro.paginas" class="form-control" placeholder="Paginas">
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripcion</label>
+                <input type="text" id="descripcion" name="descripcion" autocomplete="off" value="@Model.dtoLibro.descripcion" class="form-control" placeholder="Descripcion">
+            </div>
+            <div class="form-group">
+                <label for="fechaLanzamiento">Fecha lanzamiento</label>
+                <input type="text" class="form-control" id="fechaLanzamiento" name="fechaLanzamiento" placeholder="Fecha de lanzamiento" value="@Model.dtoLibro.fechaLanzamiento.ToString("dd-MM-yyyy")">
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" id="stock" min="0" name="stock" autocomplete="off" value="@Model.dtoLibro.stock" class="form-control" placeholder="Stock">
+            </div>
+            <input type="hidden" name="codigoLibro" value="@Model.dtoLibro.codigoLibro" />
+        </div>
+
+        <div class="box-footer">
+            <input type="button" class="btn btn-primary" id="registroUsuario" onclick="enviarFormulario(event)" name="registroUsuario" value="Guardar">
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $(function () {
+
+        $('#fechaLanzamiento').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        });
+
+        $('#frmRegistar').formValidation(
+		{
+		    framework: 'bootstrap',
+		    excluded: [':disabled', ':hidden', ':not(:visible)', '[class*="notValidate"]'],
+		    live: 'enabled',
+		    message: '<b style="color: #9d9d9d;">Asegúrese que realmente no necesita este valor.</b>',
+		    trigger: null,
+		    fields:
+			{
+			    codigoCarrera:
+                {
+                    validators:
+                    {
+                        notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Institución educativa" es requerido.</b>'
+						}
+                    }
+                },
+			    titulo:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "titulo" es requerido.</b>'
+						}
+					}
+				},
+			    fechaLanzamiento:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "Fecha de lanzamiento" es requerido.</b>'
+						}
+					}
+				},
+			    idioma:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "idioma" es requerido.</b>'
+						}
+					}
+				},
+			    paginas:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "paginas" es requerido.</b>'
+						}
+					}
+				},
+			    descripcion:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "descripcion" es requerido.</b>'
+						}
+					}
+				},
+			    stock:
+				{
+				    validators:
+					{
+					    notEmpty:
+						{
+						    message: '<b style="color: red;">El campo "stock" es requerido.</b>'
+						}
+					}
+				}
+			}
+		});
+    });
+
+    function enviarFormulario(e) {
+        e.preventDefault();
+
+        resetFieldsFrmEditar();
+
+        $('#frmRegistar').data('formValidation').validate();
+
+        if ($('#frmRegistar').data('formValidation').isValid()) {
+            swal({
+                title: '¿Estas Seguro?',
+                text: "Guardar datos del nuevo libro.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#39843A',
+                cancelButtonColor: '#dd4b39',
+                confirmButtonText: 'Si, Guardar.'
+            }).then(function (confirm) {
+                $('#frmRegistar')[0].submit();
+            });
+        }
+    }
+
+    function resetFieldsFrmEditar() {
+        $('#frmRegistar').data('formValidation').resetField($('#titulo'));
+        $('#frmRegistar').data('formValidation').resetField($('#fechaLanzamiento'));
+        $('#frmRegistar').data('formValidation').resetField($('#idioma'));
+        $('#frmRegistar').data('formValidation').resetField($('#paginas'));
+        $('#frmRegistar').data('formValidation').resetField($('#descripcion'));
+        $('#frmRegistar').data('formValidation').resetField($('#stock'));
+    }
+</script>
